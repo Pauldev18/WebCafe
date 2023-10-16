@@ -1,14 +1,14 @@
 package WebCafe.WebCafe.Controller;
 
+import WebCafe.WebCafe.DTO.LoaiUpdateDTO;
+import WebCafe.WebCafe.Entity.Ban;
 import WebCafe.WebCafe.Entity.Loai;
 import WebCafe.WebCafe.Resposity.LoaiRepo;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @CrossOrigin
@@ -28,5 +28,25 @@ public class LoaiController {
     public ResponseEntity<Loai> findByIdLoai(@RequestParam("loaiId") int id)
     {
         return new ResponseEntity<>(loaiRepo.findById(id), HttpStatus.OK);
+    }
+    @PutMapping("/updateLoai/{idLoai}")
+    public String updateLoai(@PathVariable int idLoai, @RequestBody LoaiUpdateDTO loaiUpdateDTO){
+        Loai updateLoai = loaiRepo.findById(idLoai);
+        updateLoai.setTenLoai(loaiUpdateDTO.getTenLoai());
+        loaiRepo.save(updateLoai);
+        return "Update thành công";
+    }
+    @DeleteMapping("/deleteLoai/{idLoai}")
+    public String deleteLoai(@PathVariable int idLoai){
+        Loai deleteLoai = loaiRepo.findById(idLoai);
+        loaiRepo.delete(deleteLoai);
+        return "delete thành công";
+    }
+    @PostMapping("/addLoai")
+    public Loai addLoai(@RequestBody LoaiUpdateDTO loaiUpdateDTO){
+        Loai newLoai = new Loai();
+        newLoai.setTenLoai(loaiUpdateDTO.getTenLoai());
+        loaiRepo.save(newLoai);
+        return newLoai;
     }
 }
